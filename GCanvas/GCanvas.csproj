@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<TargetPlatformVersion>10.0.18362.0</TargetPlatformVersion>
+		<AssetTargetFallback>uap10.0.18362.0</AssetTargetFallback>
+		<RootNamespace>GCanvas</RootNamespace>
+		<UseWPF>true</UseWPF>
+		<Platforms>AnyCPU;x64</Platforms>
+		<LangVersion>10</LangVersion>
+		<StartupObject>GCanvas.Program</StartupObject>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Toolkit.Wpf.UI.Controls" Version="6.1.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\UWP\UWP.csproj" />
+	</ItemGroup>
+
+</Project>
