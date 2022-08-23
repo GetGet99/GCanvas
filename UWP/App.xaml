@@ -6,10 +6,6 @@
     xmlns:local="using:UWP"
     xmlns:mux="using:Microsoft.UI.Xaml.Controls">
     <Application.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <mux:XamlControlsResources ControlsResourcesVersion="Version2" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
+        <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
     </Application.Resources>
 </xaml:XamlApplication>

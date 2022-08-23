@@ -14,6 +14,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Toolkit.Win32.UI.Controls.Interop.WinRT;
+using PInvoke;
+
 namespace GCanvas
 {
     /// <summary>
@@ -28,7 +30,10 @@ namespace GCanvas
             (Windows.UI.Xaml.Window.Current as object as IWindowPrivate).TransparentBackground = true;
             Loaded += delegate
             {
-                new ToolWindow(myInkCanvas)
+                dynamic corewin = Windows.UI.Core.CoreWindow.GetForCurrentThread();
+                var interop = (ICoreWindowInterop)corewin;
+                User32.SetWindowPos(interop.WindowHandle, new IntPtr(-1), 0, 0, 0, 0, User32.SetWindowPosFlags.SWP_NOMOVE | User32.SetWindowPosFlags.SWP_NOSIZE);
+                new ToolWindow(this, myInkCanvas)
                 {
                     Owner = this
                 }.Show();

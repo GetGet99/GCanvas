@@ -23,3 +23,12 @@ public interface IWindowPrivate
     void SetAtlasRequestCallback(IAtlasRequestCallback callback);
     Rect GetWindowContentBoundsForElement(DependencyObject element);
 }
+
+// Reference: https://stackoverflow.com/questions/34935077/getting-hwnd-off-of-corewindow-object-in-uwp
+[ComImport, Guid("45D64A29-A63E-4CB6-B498-5781D298CB4F")]
+[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+interface ICoreWindowInterop
+{
+    IntPtr WindowHandle { get; }
+    bool MessageHandled { set; }
+}

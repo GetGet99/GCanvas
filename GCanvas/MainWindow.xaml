@@ -11,6 +11,9 @@
         AllowsTransparency="True"
         WindowStyle="None"
         WindowState="Maximized"
-        Topmost="True">
+        Topmost="True"
+        Cursor="SizeAll"
+        ResizeMode="NoResize"
+        >
     <controls:InkCanvas x:Name="myInkCanvas" Grid.Row="1"/>
 </Window>
