@@ -3,3 +3,7 @@ GCanvas/bin
 GCanvas/obj
 UWP/bin
 UWP/obj
+UWP/AppPackages
+GCanvasPackager/bin
+GCanvasPackager/obj
+GCanvasPackager/Package.StoreAssociation.xml
