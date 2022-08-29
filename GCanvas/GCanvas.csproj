@@ -14,6 +14,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Toolkit.Wpf.UI.Controls" Version="6.1.2" />
+		<PackageReference Include="PInvoke.Gdi32" Version="0.7.124" />
 		<PackageReference Include="PInvoke.User32" Version="0.7.124" />
 	</ItemGroup>
 
@@ -24,5 +25,9 @@
 	<ItemGroup>
 	  <PackageReference Update="Microsoft.VCRTForwarders.140" Version="1.0.7" />
 	</ItemGroup>
-
+	<PropertyGroup>
+		<ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+		<UseWindowsForms>True</UseWindowsForms>
+	</PropertyGroup>
+	
 </Project>

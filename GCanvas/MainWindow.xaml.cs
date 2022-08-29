@@ -26,7 +26,7 @@ namespace GCanvas
         public MainWindow()
         {
             InitializeComponent();
-            myInkCanvas.InkPresenter.InputDeviceTypes = CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen;
+            myInkCanvas.InkPresenter.InputDeviceTypes = CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Touch | CoreInputDeviceTypes.Pen;
             (Windows.UI.Xaml.Window.Current as object as IWindowPrivate).TransparentBackground = true;
             Loaded += delegate
             {

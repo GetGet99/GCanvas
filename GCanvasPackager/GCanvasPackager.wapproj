@@ -46,6 +46,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup>
+    <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+  </PropertyGroup>
+  <PropertyGroup>
     <WapProjPath Condition="'$(WapProjPath)'==''">$(MSBuildExtensionsPath)\Microsoft\DesktopBridge\</WapProjPath>
   </PropertyGroup>
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.props" />
@@ -112,9 +115,27 @@
   </ItemGroup>
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets" />
   <ItemGroup>
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.1" PrivateAssets="all" />
+    <ProjectReference Include="..\GCanvas\GCanvas.csproj">
+    </ProjectReference>
+    <ProjectReference Include="..\UWP\UWP.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\GCanvas\GCanvas.csproj" />
-  </ItemGroup>
+  <Target Name="_RemoveWinMDFromAppxManifest" BeforeTargets="_GenerateCurrentProjectAppxManifest">
+    <ItemGroup>
+      <_AppxWinmdFilesToHarvest Remove="@(_AppxWinmdFilesToHarvest)" />
+    </ItemGroup>
+  </Target>
+  <Target Name="_StompSourceProjectForWapProject" BeforeTargets="_ConvertItems">
+    <ItemGroup>
+      <_TemporaryFilteredWapProjOutput Include="@(_FilteredNonWapProjProjectOutput)" />
+      <_FilteredNonWapProjProjectOutput Remove="@(_TemporaryFilteredWapProjOutput)" />
+      <_FilteredNonWapProjProjectOutput Include="@(_TemporaryFilteredWapProjOutput)">
+        <SourceProject>
+        </SourceProject>
+      </_FilteredNonWapProjProjectOutput>
+      <_DetailedPriXml Remove="@(_DetailedPriXml)" />
+    </ItemGroup>
+  </Target>
+  <PropertyGroup>
+    <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+  </PropertyGroup>
 </Project>

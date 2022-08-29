@@ -1,7 +1,14 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Interop;
 using PInvoke;
-using WinUIControls = Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls;
+using System.Drawing;
+using System.Windows.Media.Media3D;
+using System.Reflection.Metadata;
+using Windows.UI.Input.Inking;
+using System.Windows.Ink;
+
 namespace GCanvas
 {
     /// <summary>
@@ -13,8 +20,8 @@ namespace GCanvas
         {
             InitializeComponent();
 
-            var InkToolbar = myInkToolbar.GetUwpInternalObject() as WinUIControls.InkToolbar;
-            var InkCanvas = myInkCanvas.GetUwpInternalObject() as WinUIControls.InkCanvas;
+            var InkToolbar = myInkToolbar.GetUwpInternalObject() as InkToolbar;
+            var InkCanvas = myInkCanvas.GetUwpInternalObject() as InkCanvas;
             InkToolbar.RequestedTheme = Windows.UI.Xaml.ElementTheme.Dark;
             InkToolbar.TargetInkCanvas = InkCanvas;
             InkToolbar.Background = new Windows.UI.Xaml.Media.SolidColorBrush(new Windows.UI.Color
@@ -25,13 +32,108 @@ namespace GCanvas
                 A = 255
             });
             var uisetttings = new Windows.UI.ViewManagement.UISettings();
-            var MouseIcon = new WinUIControls.SymbolIcon((WinUIControls.Symbol)0xE962);
-            var btn = new WinUIControls.InkToolbarCustomToolButton
+            var MouseIcon = new SymbolIcon((Symbol)0xE962);
+            var btn = new InkToolbarCustomToolButton
             {
                 IsChecked = false,
                 Content = MouseIcon
             };
-            InkToolbar.Children.Insert(0,btn);
+            InkToolbar.Children.Insert(0, btn);
+            {
+                var screenshotbtn = new InkToolbarCustomToggleButton
+                {
+                    Content = new SymbolIcon(Symbol.Camera)
+                };
+                InkToolbar.Children.Insert(0, screenshotbtn);
+                screenshotbtn.Click += delegate
+                {
+                    Hide();
+                    var screen = System.Windows.Forms.Screen.FromHandle(new WindowInteropHelper(mw).Handle);
+                    using var hdcScreen = new User32.SafeDCHandle(
+                        IntPtr.Zero, Gdi32Ex.CreateDCW("Display", null, null, IntPtr.Zero)
+                    );
+                    var bounds = screen.Bounds;
+
+                    // Reference: https://ourcodeworld.com/articles/read/195/capturing-screenshots-of-different-ways-with-c-and-winforms
+                    var handle = User32.GetDesktopWindow();
+                    using var hdcSrc = User32.GetWindowDC(handle);
+                    using var hdcDest = Gdi32.CreateCompatibleDC(hdcSrc);
+                    var hBitmap = Gdi32.CreateCompatibleBitmap(hdcSrc, bounds.Width, bounds.Height);
+                    var hOld = Gdi32.SelectObject(hdcDest, hBitmap);
+                    Gdi32.BitBlt(hdcDest, 0, 0, bounds.Width, bounds.Height, hdcSrc, 0, 0, 0x00CC0020);
+                    Show();
+                    Gdi32.SelectObject(hdcDest, hOld);
+                    Gdi32.DeleteDC(hdcDest);
+                    hdcSrc.Dispose();
+                    System.Windows.Forms.Clipboard.SetImage(System.Drawing.Image.FromHbitmap(hBitmap));
+                };
+            }
+            {
+                var clearbtn = new InkToolbarCustomToggleButton
+                {
+                    Content = new SymbolIcon(Symbol.Clear)
+                };
+                Button btnConfirmDelete;
+                var flyout = new Flyout
+                {
+                    Content = new StackPanel
+                    {
+                        Children =
+                        {
+                            new TextBlock { Text = "Warning: All the annotations will be deleted" },
+                            (btnConfirmDelete = new Button {
+                                Content = "Confirm!",
+                                Margin = new Windows.UI.Xaml.Thickness {
+                                    Top = 16
+                                }
+                            }
+                            )
+                        }
+                    },
+                    Placement = Windows.UI.Xaml.Controls.Primitives.FlyoutPlacementMode.Bottom,
+                    ShouldConstrainToRootBounds = false
+                };
+                InkToolbar.Children.Add(clearbtn);
+                clearbtn.Click += delegate
+                {
+                    flyout.ShowAt(clearbtn);
+                };
+                btnConfirmDelete.Click += delegate
+                {
+                    InkCanvas.InkPresenter.StrokeContainer.Clear();
+                    flyout.Hide();
+                };
+            }
+            {
+                //var lasso = new InkToolbarCustomPenButton
+                //{
+                    
+                //};
+                //InkToolbar.Children.Add(lasso);
+                //InkToolbar.ActiveToolChanged += delegate
+                //{
+                //    if (InkToolbar.ActiveTool == lasso)
+                //    {
+
+                //    }
+                //};
+                
+                //InkCanvas.InkPresenter.InputProcessingConfiguration.RightDragAction = InkInputRightDragAction.LeaveUnprocessed;
+
+
+                //var inkstroke = new InkStrokeBuilder().CreateStroke(new Windows.Foundation.Point[]
+                //{
+                //    new Windows.Foundation.Point(0, 100),
+                //    new Windows.Foundation.Point(100, 0),
+                //    new Windows.Foundation.Point(200, 100),
+                //    new Windows.Foundation.Point(100, 200),
+                //    new Windows.Foundation.Point(0, 100)
+                //});
+                //inkstroke.DrawingAttributes.Color = Windows.UI.Color.FromArgb(255, 255, 255, 255);
+                //inkstroke.DrawingAttributes.PenTip = PenTipShape.Circle;
+                //InkCanvas.InkPresenter.StrokeContainer.AddStroke(inkstroke);
+
+            }
             void SetClickThrough(Window mw)
             {
                 var handle = new WindowInteropHelper(mw).Handle;
@@ -74,7 +176,8 @@ namespace GCanvas
                 try
                 {
                     mw?.Close();
-                } catch
+                }
+                catch
                 {
 
                 }
@@ -84,7 +187,8 @@ namespace GCanvas
                 if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
                 {
                     DragMove();
-                } else if (e.RightButton == System.Windows.Input.MouseButtonState.Pressed)
+                }
+                else if (e.RightButton == System.Windows.Input.MouseButtonState.Pressed)
                 {
                     Close();
                 }

@@ -6,4 +6,5 @@ UWP/obj
 UWP/AppPackages
 GCanvasPackager/bin
 GCanvasPackager/obj
+GCanvasPackager/AppPackages
 GCanvasPackager/Package.StoreAssociation.xml
