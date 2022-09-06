@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="ToolWindow" Height="46" Width="300"
         xmlns:controls="clr-namespace:Microsoft.Toolkit.Wpf.UI.Controls;assembly=Microsoft.Toolkit.Wpf.UI.Controls"
+        xmlns:xamlhost="clr-namespace:Microsoft.Toolkit.Wpf.UI.XamlHost;assembly=Microsoft.Toolkit.Wpf.UI.XamlHost"
         AllowsTransparency="True"
         Background="Transparent"
         WindowStyle="None"

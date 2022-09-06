@@ -10,10 +10,12 @@
 		<Platforms>AnyCPU;x64;x86</Platforms>
 		<LangVersion>10</LangVersion>
 		<StartupObject>GCanvas.Program</StartupObject>
+		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Toolkit.Wpf.UI.Controls" Version="6.1.2" />
+		<PackageReference Include="Microsoft.Toolkit.Wpf.UI.XamlHost" Version="6.1.2" />
 		<PackageReference Include="PInvoke.Gdi32" Version="0.7.124" />
 		<PackageReference Include="PInvoke.User32" Version="0.7.124" />
 	</ItemGroup>
